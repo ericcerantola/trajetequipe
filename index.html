@@ -1,14 +1,12 @@
 <!doctype html>
-
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#101012">
 <meta name="description" content="TrajetÉquipe — covoiturage entre collègues">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
 <title>TrajetÉquipe — Test pilote</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <style>
 :root{color-scheme:dark;--bg:#101012;--panel:#1b1b1f;--line:#39393f;--text:#f4f4f5;--muted:#aaaab2;--red:#e32636}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,sans-serif}
@@ -20,15 +18,13 @@ button{font:inherit;cursor:pointer}.btn{border:0;border-radius:10px;background:v
 #map{height:270px;border:1px solid var(--line);border-radius:12px;margin-top:12px;overflow:hidden;background:#242428}.hint{font-size:12px;color:var(--muted);margin-top:7px}.maptools{display:flex;gap:8px;margin-top:12px}.maptools .btn{flex:1;padding:9px 10px}.searchrow{display:grid;grid-template-columns:1fr auto;gap:8px}.suggestions{display:none;background:#252529;border:1px solid #4a4a52;border-radius:10px;margin-top:7px;overflow:hidden}.suggestions button{display:block;width:100%;text-align:left;padding:11px 12px;border:0;border-bottom:1px solid #39393f;background:transparent;color:var(--text);font-size:13px}.mapstatus{font-size:12px;color:#ffabb2;margin-top:6px;min-height:17px}.notice{padding:12px;background:#2b2419;color:#f0d8a8;border-radius:10px;font-size:12px;margin-top:13px}
 .result{display:none;background:#291519;border:1px solid #5a242d;border-radius:12px;padding:12px;margin-top:12px;overflow-wrap:anywhere}.saved{font-size:12px;color:#ffabb2}.footer{text-align:center;color:#888891;font-size:12px;padding:12px}.shift-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.shift{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:9px;border-radius:10px;margin:0}.shift input{width:18px;min-height:18px;height:18px;accent-color:var(--red)}.shift span{font-size:12px}
 @media(min-width:620px){main{padding-top:25px}.intro h1{font-size:38px}.card{padding:21px}}
-</style>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-</head>
+</style></head>
 <body>
 <header><div class="brand">trajet<span>équipe</span></div><div class="tag">PILOTE PROTECTAS</div></header>
 <main>
-<section class="intro"><div class="eyebrow">Le covoiturage entre collègues</div><h1>Les trajets ensemble.<br>Les comptes au clair.</h1><p>Version de test mobile : points de rassemblement, départs conducteurs et arrêts.</p><button class="btn secondary" id="installBtn" style="margin-top:12px">Installer sur mon téléphone</button></section>
+<section class="intro"><div class="eyebrow">Le covoiturage entre collègues</div><h1>Les trajets ensemble.<br>Les comptes au clair.</h1><p>Version pilote : points de rassemblement partagés entre appareils.</p></section>
 <section class="card">
-<h2>1. Groupe pilote</h2><p class="sub">Crée une fiche de groupe sur cet appareil.</p>
+<h2>1. Groupe pilote</h2><p class="sub">Les informations de groupe restent sur cet appareil pour le moment.</p>
 <label for="groupName">Nom du groupe</label><input id="groupName" value="Protectas — covoiturage" maxlength="70">
 <div class="two"><div><label for="siteName">Site de travail</label><input id="siteName" value="Plan-les-Ouates" maxlength="100"></div><div><label for="personName">Ton prénom</label><input id="personName" placeholder="Ex. Camille" maxlength="50"></div></div>
 <label>Horaires concernés</label><div class="shift-grid">
@@ -36,42 +32,70 @@ button{font:inherit;cursor:pointer}.btn{border:0;border-radius:10px;background:v
 <button class="btn full" id="saveGroup">Enregistrer le groupe sur ce téléphone</button><div id="groupResult" class="result" aria-live="polite"></div>
 </section>
 <section class="card" id="points">
-<h2>2. Point de rassemblement</h2><p class="sub">Recherche une adresse pour placer le repère automatiquement, ou touche la carte pour l’ajuster.</p>
-<label for="pointType">Type de point</label><select id="pointType"><option value="common">Point commun du groupe</option><option value="driver">Mon départ en tant que conducteur</option></select>
+<h2>2. Point de rassemblement</h2><p class="sub">Les points enregistrés ici sont partagés avec les autres utilisateurs de cette application.</p>
+<label for="pointType">Type de point</label><select id="pointType"><option value="common">Point commun du groupe</option><option value="driver">Départ conducteur</option></select>
 <label for="pointLabel">Nom du lieu</label><input id="pointLabel" placeholder="Ex. Parking de covoiturage de Cruseilles" maxlength="100">
-<label for="pointAddress">Adresse / description</label><div class="searchrow"><input id="pointAddress" placeholder="Rue, parking, commune ou repère" maxlength="180"><button class="btn" id="searchAddress" type="button">Rechercher</button></div><div id="suggestions" class="suggestions" aria-live="polite"></div><p class="hint">Saisis une adresse puis appuie sur Rechercher. Choisis le bon résultat pour placer le repère.</p>
+<label for="pointAddress">Adresse / description</label><div class="searchrow"><input id="pointAddress" placeholder="Rue, parking, commune ou repère" maxlength="180"><button class="btn" id="searchAddress" type="button">Rechercher</button></div><div id="suggestions" class="suggestions"></div><p class="hint">Choisis le bon résultat pour positionner le repère.</p>
 <div class="two"><div><label for="lat">Latitude</label><input id="lat" placeholder="Cliquer sur la carte" inputmode="decimal"></div><div><label for="lon">Longitude</label><input id="lon" placeholder="Cliquer sur la carte" inputmode="decimal"></div></div>
-<div class="maptools"><button class="btn secondary" id="planView" type="button">Vue plan</button><button class="btn secondary" id="satelliteView" type="button">Vue satellite + rues</button></div><div id="map" aria-label="Carte de sélection du point de rassemblement"></div><p id="mapStatus" class="mapstatus" aria-live="polite"></p>
-<p class="hint">Choisis une adresse dans les résultats ou touche la carte pour ajuster le repère. En vue satellite, les noms de rues sont superposés lorsque les données le permettent.</p>
-<div class="btnrow"><button class="btn secondary" id="useLocation">Utiliser ma position</button><button class="btn" id="savePoint">Enregistrer ce point</button></div>
+<div class="maptools"><button class="btn secondary" id="planView" type="button">Vue plan</button><button class="btn secondary" id="satelliteView" type="button">Vue satellite + rues</button></div><div id="map" aria-label="Carte de sélection du point"></div><p id="mapStatus" class="mapstatus" aria-live="polite"></p>
+<div class="btnrow"><button class="btn secondary" id="useLocation">Utiliser ma position</button><button class="btn" id="savePoint">Partager ce point</button></div>
 <label for="stops">Arrêts supplémentaires (un par ligne)</label><textarea id="stops" rows="2" placeholder="Ex. Gare de Cruseilles&#10;Parking de Copponex"></textarea><div id="pointResult" class="result" aria-live="polite"></div>
-<div class="notice"><strong>Important :</strong> les points et le groupe sont enregistrés uniquement sur ce téléphone. Le partage collectif nécessite une base de données et une authentification.</div>
+<div class="notice"><strong>Prototype :</strong> les points sont accessibles à toute personne disposant de l’application et de son adresse. N’ajoute pas d’informations personnelles sensibles. Une authentification et des règles d’accès par groupe seront nécessaires avant un déploiement réel.</div>
 </section>
-<section class="card"><h2>3. Vérifier les points enregistrés</h2><p class="sub">Résumé local des points enregistrés sur cet appareil.</p><div id="savedPoints"><p>Aucun point enregistré pour le moment.</p></div><button class="btn secondary full" id="exportData">Exporter mes données de test</button></section>
-<div class="footer">TrajetÉquipe · prototype pilote · données fictives et locales</div>
+<section class="card"><h2>3. Points partagés</h2><p class="sub">Liste commune, actualisée depuis la base de données.</p><div id="savedPoints"><p>Chargement…</p></div><button class="btn secondary full" id="refreshPoints">Actualiser la liste</button></section>
+<div class="footer">TrajetÉquipe · prototype pilote</div>
 </main>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
-const $=id=>document.getElementById(id),KEY="trajetequipe-pilot-v3";
-let map,marker,installPrompt,planLayer,satelliteLayer,streetLabelsLayer;
+const $=id=>document.getElementById(id), KEY="trajetequipe-pilot-v3";
+const SUPABASE_URL="https://wrblxsnbuatqlidmegsr.supabase.co";
+const SUPABASE_KEY="sb_publishable_Y1CRaa8HslnxvltZ4ckoTA_pt2fxHcF";
+let map,marker,planLayer,satelliteLayer,streetLabelsLayer;
 const blank=()=>({group:null,points:{common:null,driver:null}});
 function read(){try{return {...blank(),...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch(e){return blank()}}
 function write(d){localStorage.setItem(KEY,JSON.stringify(d))}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function setPin(lat,lon){$("lat").value=Number(lat).toFixed(6);$("lon").value=Number(lon).toFixed(6);const ll=[Number(lat),Number(lon)];if(marker)marker.setLatLng(ll);else marker=L.marker(ll).addTo(map)}
-function initMap(){if(!window.L){$("mapStatus").textContent="La carte n’a pas pu charger. Vérifie la connexion Internet.";return}map=L.map("map").setView([46.15,6.12],10);planLayer=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap contributors"});satelliteLayer=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Tiles © Esri"});streetLabelsLayer=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,opacity:1,attribution:"Road labels © Esri"});planLayer.addTo(map);map.on("click",e=>{setPin(e.latlng.lat,e.latlng.lng);$("mapStatus").textContent="Repère déplacé manuellement."});$("planView").onclick=()=>{if(map.hasLayer(satelliteLayer))map.removeLayer(satelliteLayer);if(map.hasLayer(streetLabelsLayer))map.removeLayer(streetLabelsLayer);planLayer.addTo(map);$("mapStatus").textContent="Vue plan OpenStreetMap."};$("satelliteView").onclick=()=>{if(map.hasLayer(planLayer))map.removeLayer(planLayer);satelliteLayer.addTo(map);streetLabelsLayer.addTo(map);$("mapStatus").textContent="Vue satellite avec couche des routes et noms de rues."};$("searchAddress").onclick=searchAddress;$("pointAddress").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();searchAddress()}});setTimeout(()=>map.invalidateSize(),200)}
-async function searchAddress(){const q=$("pointAddress").value.trim(),box=$("suggestions");box.innerHTML="";box.style.display="none";if(q.length<3){$("mapStatus").textContent="Saisis une adresse plus complète.";return}const btn=$("searchAddress");btn.disabled=true;btn.textContent="Recherche…";$("mapStatus").textContent="Recherche de l’adresse…";try{const res=await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&q="+encodeURIComponent(q),{headers:{Accept:"application/json"}});if(!res.ok)throw Error();const data=await res.json();if(!data.length){$("mapStatus").textContent="Aucun résultat. Essaie avec la commune ou le code postal.";return}data.forEach(item=>{const b=document.createElement("button");b.type="button";b.textContent=item.display_name;b.onclick=()=>{const lat=Number(item.lat),lon=Number(item.lon);setPin(lat,lon);map.setView([lat,lon],16);if(!$("pointLabel").value.trim())$("pointLabel").value=(item.name||item.display_name.split(",")[0]).slice(0,100);$("pointAddress").value=item.display_name;box.style.display="none";box.innerHTML="";$("mapStatus").textContent="Adresse sélectionnée. Vérifie le repère puis enregistre."};box.appendChild(b)});box.style.display="block";$("mapStatus").textContent="Choisis l’adresse correspondant au bon lieu."}catch(e){$("mapStatus").textContent="Recherche indisponible. Tu peux placer le repère directement sur la carte."}finally{btn.disabled=false;btn.textContent="Rechercher"}}
-function loadPoint(){const d=read(),p=d.points[$("pointType").value];$("pointLabel").value=p?.label||"";$("pointAddress").value=p?.address||"";$("lat").value=p?.lat??"";$("lon").value=p?.lon??"";$("stops").value=p?.stops||"";if(map&&p?.lat!=null){setPin(p.lat,p.lon);map.setView([p.lat,p.lon],14)}else if(marker&&map){map.removeLayer(marker);marker=null}}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function renderSaved(){const d=read();let html="";for(const [k,title] of [["common","Point commun"],["driver","Départ conducteur"]]){const p=d.points[k];if(p)html+=`<div style="border-bottom:1px solid #39393f;padding:10px 0"><strong>${title} : ${escapeHtml(p.label||"Lieu sans nom")}</strong><p>${escapeHtml(p.address||"Adresse non renseignée")}</p>${p.lat!=null?`<p>${p.lat}, ${p.lon}</p>`:""}${p.stops?`<p>Arrêts : ${escapeHtml(p.stops).replaceAll("\n"," · ")}</p>`:""}</div>`}$("savedPoints").innerHTML=html||"<p>Aucun point enregistré pour le moment.</p>"}
-$("saveGroup").onclick=()=>{const name=$("personName").value.trim();if(!name){$("personName").focus();alert("Entre ton prénom pour créer la fiche de test.");return}const group={name:$("groupName").value.trim(),site:$("siteName").value.trim(),person:name,shifts:[...document.querySelectorAll('input[name="shift"]:checked')].map(x=>x.value),updatedAt:new Date().toISOString()};const d=read();d.group=group;write(d);$("groupResult").style.display="block";$("groupResult").innerHTML=`<strong>Fiche enregistrée sur cet appareil</strong>${escapeHtml(group.name)}<br>Responsable : ${escapeHtml(name)}<br>Site : ${escapeHtml(group.site)}<br>Horaires : ${group.shifts.length?group.shifts.map(escapeHtml).join(", "):"à préciser"}<br><span class="saved">Les collègues ne voient pas encore ces données.</span>`};
-$("pointType").onchange=loadPoint;
-$("savePoint").onclick=()=>{const la=$("lat").value.trim(),lo=$("lon").value.trim();if((la&&!lo)||(!la&&lo)){alert("Renseigne latitude et longitude, ou choisis le point sur la carte.");return}if(la&&(!Number.isFinite(Number(la))||!Number.isFinite(Number(lo))||Math.abs(Number(la))>90||Math.abs(Number(lo))>180)){alert("Coordonnées GPS invalides.");return}const d=read();d.points[$("pointType").value]={label:$("pointLabel").value.trim(),address:$("pointAddress").value.trim(),lat:la?Number(la):null,lon:lo?Number(lo):null,stops:$("stops").value.trim(),updatedAt:new Date().toISOString()};write(d);$("pointResult").style.display="block";$("pointResult").innerHTML=`<strong>Point enregistré sur ce téléphone</strong>${escapeHtml($("pointLabel").value||"Lieu sans nom")}<br>${escapeHtml($("pointAddress").value||"Adresse non renseignée")}<br><span class="saved">Pas encore partagé avec les autres membres.</span>`;renderSaved()};
+function initMap(){if(!window.L){$("mapStatus").textContent="Carte indisponible : vérifie la connexion.";return}
+ map=L.map("map").setView([46.15,6.12],10);
+ planLayer=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap contributors"});
+ satelliteLayer=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Tiles © Esri"});
+ streetLabelsLayer=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Road labels © Esri"});
+ planLayer.addTo(map);map.on("click",e=>{setPin(e.latlng.lat,e.latlng.lng);$("mapStatus").textContent="Repère déplacé."});
+ $("planView").onclick=()=>{if(map.hasLayer(satelliteLayer))map.removeLayer(satelliteLayer);if(map.hasLayer(streetLabelsLayer))map.removeLayer(streetLabelsLayer);planLayer.addTo(map)};
+ $("satelliteView").onclick=()=>{if(map.hasLayer(planLayer))map.removeLayer(planLayer);satelliteLayer.addTo(map);streetLabelsLayer.addTo(map)};
+ $("searchAddress").onclick=searchAddress;$("pointAddress").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();searchAddress()}});
+ setTimeout(()=>map.invalidateSize(),200)}
+async function searchAddress(){const q=$("pointAddress").value.trim(),box=$("suggestions");box.innerHTML="";box.style.display="none";if(q.length<3){$("mapStatus").textContent="Saisis une adresse plus complète.";return}
+ const btn=$("searchAddress");btn.disabled=true;btn.textContent="Recherche…";$("mapStatus").textContent="Recherche de l’adresse…";
+ try{const res=await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&q="+encodeURIComponent(q),{headers:{Accept:"application/json"}});if(!res.ok)throw Error();const data=await res.json();if(!data.length){$("mapStatus").textContent="Aucun résultat trouvé.";return}
+ data.forEach(item=>{const b=document.createElement("button");b.type="button";b.textContent=item.display_name;b.onclick=()=>{const lat=+item.lat,lon=+item.lon;setPin(lat,lon);map.setView([lat,lon],16);if(!$("pointLabel").value.trim())$("pointLabel").value=(item.name||item.display_name.split(",")[0]).slice(0,100);$("pointAddress").value=item.display_name;box.style.display="none";$("mapStatus").textContent="Adresse sélectionnée : vérifie le repère puis partage."};box.appendChild(b)});box.style.display="block";$("mapStatus").textContent="Sélectionne l’adresse exacte."}
+ catch(e){$("mapStatus").textContent="Recherche indisponible. Place le repère directement sur la carte."}
+ finally{btn.disabled=false;btn.textContent="Rechercher"}}
+async function fetchSharedPoints(){const r=await fetch(SUPABASE_URL+"/rest/v1/rendezvous_points?select=*&order=created_at.desc",{headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY}});if(!r.ok)throw Error("Erreur de lecture ("+r.status+")");return r.json()}
+async function renderSaved(){const box=$("savedPoints");box.innerHTML="<p>Chargement des points partagés…</p>";
+ try{const rows=await fetchSharedPoints();if(!rows.length){box.innerHTML="<p>Aucun point partagé pour le moment.</p>";return}
+ box.innerHTML=rows.map(p=>'<div style="border-bottom:1px solid #39393f;padding:10px 0"><strong>'+escapeHtml(p.point_name)+'</strong><p>Groupe : '+escapeHtml(p.pilot_group)+'</p><p>'+escapeHtml(p.address)+'</p>'+(p.latitude!=null?'<p>'+p.latitude+', '+p.longitude+'</p>':'')+(p.notes?'<p>'+escapeHtml(p.notes).replace(/\n/g,"<br>")+'</p>':'')+'<p class="saved">Partagé le '+new Date(p.created_at).toLocaleString("fr-FR")+'</p></div>').join("")}
+ catch(e){box.innerHTML="<p>Impossible de charger les points partagés. Vérifie la connexion ou la configuration de la base.</p>"}}
+$("saveGroup").onclick=()=>{const name=$("personName").value.trim();if(!name){$("personName").focus();alert("Entre ton prénom pour créer la fiche de test.");return}
+ const group={name:$("groupName").value.trim(),site:$("siteName").value.trim(),person:name,shifts:[...document.querySelectorAll('input[name="shift"]:checked')].map(x=>x.value),updatedAt:new Date().toISOString()};
+ const d=read();d.group=group;write(d);$("groupResult").style.display="block";$("groupResult").innerHTML='<strong>Fiche enregistrée sur cet appareil</strong><br>'+escapeHtml(group.name)+'<br>Responsable : '+escapeHtml(name)+'<br>Site : '+escapeHtml(group.site)+'<br>Horaires : '+(group.shifts.length?group.shifts.map(escapeHtml).join(", "):"à préciser")};
+$("savePoint").onclick=async()=>{const la=$("lat").value.trim(),lo=$("lon").value.trim(),label=$("pointLabel").value.trim(),address=$("pointAddress").value.trim();
+ if((la&&!lo)||(!la&&lo)){alert("Renseigne latitude et longitude, ou choisis le point sur la carte.");return}
+ if(!label||!address){alert("Renseigne le nom du lieu et son adresse.");return}
+ if(la&&(!Number.isFinite(+la)||!Number.isFinite(+lo)||Math.abs(+la)>90||Math.abs(+lo)>180)){alert("Coordonnées GPS invalides.");return}
+ const d=read(),groupName=(d.group&&d.group.name)||$("groupName").value.trim()||"Protectas — covoiturage",kind=$("pointType").value==="common"?"Point commun":"Départ conducteur";
+ const notes=(kind+($("stops").value.trim()?"\nArrêts : "+$("stops").value.trim():"")).slice(0,500);
+ const payload={pilot_group:groupName,point_name:label,address:address,latitude:la?+la:null,longitude:lo?+lo:null,notes};
+ const btn=$("savePoint");btn.disabled=true;btn.textContent="Partage…";$("pointResult").style.display="block";$("pointResult").textContent="Envoi du point à la base commune…";
+ try{const r=await fetch(SUPABASE_URL+"/rest/v1/rendezvous_points",{method:"POST",headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(payload)});
+ if(!r.ok){const detail=await r.text();throw Error("Erreur "+r.status+(detail?" : "+detail.slice(0,180):""))}
+ d.points[$("pointType").value]={label,address,lat:la?+la:null,lon:lo?+lo:null,stops:$("stops").value.trim(),updatedAt:new Date().toISOString()};write(d);
+ $("pointResult").innerHTML="<strong>Point partagé avec succès.</strong><br>"+escapeHtml(label)+"<br>"+escapeHtml(address);await renderSaved()
+ }catch(e){$("pointResult").innerHTML="<strong>Partage impossible.</strong><br>"+escapeHtml(e.message)+"<br>Le point n’a pas été confirmé comme enregistré."}
+ finally{btn.disabled=false;btn.textContent="Partager ce point"}};
+$("pointType").onchange=()=>{const p=read().points[$("pointType").value];$("pointLabel").value=p?.label||"";$("pointAddress").value=p?.address||"";$("lat").value=p?.lat??"";$("lon").value=p?.lon??"";$("stops").value=p?.stops||"";if(map&&p?.lat!=null){setPin(p.lat,p.lon);map.setView([p.lat,p.lon],14)}else if(marker&&map){map.removeLayer(marker);marker=null}};
 $("useLocation").onclick=()=>{if(!navigator.geolocation){alert("Géolocalisation indisponible.");return}navigator.geolocation.getCurrentPosition(p=>{setPin(p.coords.latitude,p.coords.longitude);map.setView([p.coords.latitude,p.coords.longitude],15)},()=>alert("Position non disponible. Autorise la localisation ou choisis le point sur la carte."),{enableHighAccuracy:false,timeout:10000})};
-$("exportData").onclick=()=>{const blob=new Blob([JSON.stringify(read(),null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="trajetequipe-test.json";a.click();URL.revokeObjectURL(url)};
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e});
-$("installBtn").onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null}else alert("Sur Android : dans Chrome, ouvre le menu ⋮ puis « Installer l’application » ou « Ajouter à l’écran d’accueil ».")};
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
-initMap();loadPoint();renderSaved();
-</script>
-</body>
-</html>
+$("refreshPoints").onclick=renderSaved;
+initMap();renderSaved();
+</script></body></html>
