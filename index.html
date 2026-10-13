@@ -2,233 +2,84 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TrajetÉquipe — Prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101012">
+<meta name="description" content="TrajetÉquipe — covoiturage entre collègues">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>TrajetÉquipe — Test pilote</title>
 <style>
-:root{--ink:#f3f3f4;--muted:#a7a7ad;--line:#34343a;--bg:#101012;--green:#e32636;--mint:#321519;--white:#1b1b1f;--amber:#3a2a16}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink)}
-header{background:#080809;color:#fff;border-bottom:1px solid #3c171b;padding:18px max(20px,calc((100% - 1120px)/2));display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{font-weight:800;font-size:20px;letter-spacing:-.5px}.brand span{color:#ff3344}.tag{font-size:12px;border:1px solid #5b3438;border-radius:99px;padding:5px 9px;color:#d8e8e9}
-main{max-width:1120px;margin:28px auto;padding:0 18px 40px}.hero{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:22px}.eyebrow{color:#ff4654;font-size:12px;text-transform:uppercase;font-weight:800;letter-spacing:1.4px}h1{font-size:clamp(26px,4vw,38px);line-height:1.1;letter-spacing:-1.2px;margin:8px 0}p{margin:5px 0;color:var(--muted)}.site{font-size:13px;color:#f5dfe1;background:#35171b;padding:10px 13px;border-radius:12px;white-space:nowrap}
-.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 5px 24px #00000035}.card h2{font-size:18px;margin:0 0 5px}.sub{font-size:13px;margin-bottom:18px}
-label{display:block;font-weight:650;font-size:13px;margin:12px 0 6px}input,select{width:100%;border:1px solid #48484f;border-radius:10px;padding:11px 12px;background:#242428;color:var(--ink);font:inherit}input:focus,select:focus{outline:2px solid #6f242c;border-color:#e32636}
-.shift-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.shift-option{display:flex;align-items:center;gap:9px;border:1px solid var(--line);padding:10px;border-radius:11px;margin:0;cursor:pointer}
-.shift-option input{width:17px;height:17px;accent-color:#e32636;flex-shrink:0}
-.shift-option span{display:flex;flex-direction:column;gap:2px}
-.shift-option strong{font-size:13px}
-.shift-option small{font-size:11px;color:var(--muted);font-weight:400}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{border:0;border-radius:10px;background:var(--green);color:white;padding:12px 15px;font:inherit;font-weight:750;cursor:pointer;margin-top:16px}.btn.secondary{background:#321519;color:#ff6873;border:1px solid #61262d}.btn:hover{filter:brightness(.97)}.wide{width:100%}
-.calendar-head{display:flex;justify-content:space-between;align-items:center;margin:16px 0 10px}.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.cal-label{text-align:center;font-size:11px;color:var(--muted);padding:5px 0}.cal-day{border:1px solid var(--line);background:#242428;color:var(--ink);border-radius:9px;min-height:52px;padding:5px 2px;text-align:center;cursor:pointer;font:inherit}.cal-day.empty{visibility:hidden}.cal-day.selected{border:2px solid #e32636;background:#321519}.cal-day .day-num{font-size:12px;display:block}.cal-day .day-shift{display:block;font-size:9px;color:#ff6873;overflow-wrap:anywhere}.day-editor{margin-top:16px;padding:14px;background:#222226;border:1px solid var(--line);border-radius:12px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.stat{background:#242427;border:1px solid #39393f;border-radius:12px;padding:12px}.stat small{display:block;color:var(--muted);font-size:12px}.stat strong{font-size:20px;letter-spacing:-.5px}
-.members{display:flex;flex-direction:column;gap:10px}.member{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #333338}.member:last-child{border-bottom:0}.avatar{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:11px;background:var(--mint);color:#ff5663;font-weight:800;margin-right:10px}.person{display:flex;align-items:center}.role{font-size:12px;color:var(--muted)}.pill{font-size:11px;font-weight:750;padding:5px 8px;border-radius:99px;background:var(--mint);color:var(--green)}.notice{margin-top:16px;background:#2d2418;padding:12px;border-radius:10px;color:#f0d7a8;font-size:12px}.result{display:none;margin-top:14px;background:#281518;padding:14px;border-radius:12px;color:#ffd9dc;border:1px solid #542128}.result strong{display:block;font-size:18px}.footer{text-align:center;color:#85858d;font-size:12px;margin-top:22px}
-@media(max-width:760px){.calendar-grid{gap:3px}.cal-day{min-height:45px}.cal-day .day-shift{font-size:8px}.grid{grid-template-columns:1fr}.hero{align-items:start;flex-direction:column}.site{white-space:normal}.stats{grid-template-columns:1fr 1fr 1fr}.card{padding:17px}}
+:root{color-scheme:dark;--bg:#101012;--panel:#1b1b1f;--line:#39393f;--text:#f4f4f5;--muted:#aaaab2;--red:#e32636;--redbg:#35171b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#09090a;border-bottom:1px solid #482027;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{font-size:21px;font-weight:850;letter-spacing:-.6px}.brand span{color:#ff4050}.tag{font-size:11px;color:#ffabb2;border:1px solid #663039;border-radius:30px;padding:5px 8px}
+main{max-width:760px;margin:auto;padding:18px 13px 40px}.intro{padding:8px 3px 16px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;font-weight:800;color:#ff5361}h1{font-size:30px;line-height:1.08;letter-spacing:-1px;margin:8px 0}p{color:var(--muted);margin:5px 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:17px;margin:12px 0}.card h2{font-size:18px;margin:0 0 3px}.sub{font-size:13px;margin-bottom:14px}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}input,select,textarea{width:100%;border:1px solid #4a4a52;border-radius:10px;padding:11px 12px;background:#252529;color:var(--text);font:inherit;min-height:44px}textarea{resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{font:inherit;cursor:pointer}.btn{border:0;border-radius:10px;background:var(--red);color:white;padding:12px 14px;font-weight:800;min-height:44px}.btn.secondary{background:#321519;border:1px solid #69262f;color:#ff8790}.btn.full{width:100%;margin-top:15px}.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+#map{height:270px;border:1px solid var(--line);border-radius:12px;margin-top:12px;overflow:hidden;background:#242428}.hint{font-size:12px;color:var(--muted);margin-top:7px}.notice{padding:12px;background:#2b2419;color:#f0d8a8;border-radius:10px;font-size:12px;margin-top:13px}
+.result{display:none;background:#291519;border:1px solid #5a242d;border-radius:12px;padding:12px;margin-top:12px;overflow-wrap:anywhere}.result strong{display:block;margin-bottom:4px}.saved{font-size:12px;color:#ffabb2}.footer{text-align:center;color:#888891;font-size:12px;padding:12px}
+.shift-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.shift{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:9px;border-radius:10px;margin:0}.shift input{width:18px;min-height:18px;height:18px;accent-color:var(--red)}.shift span{font-size:12px}
+@media(min-width:620px){main{padding-top:25px}.intro h1{font-size:38px}.card{padding:21px}}
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 <body>
-<header><div class="brand">trajet<span>équipe</span></div><div class="tag">Prototype fonctionnel · V1</div></header>
+<header><div class="brand">trajet<span>équipe</span></div><div class="tag">PILOTE PROTECTAS</div></header>
 <main>
-  <div class="hero">
-    <div><div class="eyebrow">Le covoiturage entre collègues</div><h1>Les trajets ensemble.<br>Les comptes au clair.</h1><p>Un groupe privé pour organiser les trajets domicile-travail et répartir les frais estimés.</p></div>
-    <div class="site">Site pilote · Plan-les-Ouates, Suisse</div>
+ <section class="intro"><div class="eyebrow">Le covoiturage entre collègues</div><h1>Les trajets ensemble.<br>Les comptes au clair.</h1><p>Version de test mobile : points de rassemblement, départs conducteurs et arrêts.</p><button class="btn secondary" id="installBtn" style="margin-top:12px">Installer sur mon téléphone</button></section>
+ <section class="card">
+  <h2>1. Groupe pilote</h2><p class="sub">Crée une fiche de groupe sur cet appareil.</p>
+  <label for="groupName">Nom du groupe</label><input id="groupName" value="Protectas — covoiturage" maxlength="70">
+  <div class="two"><div><label for="siteName">Site de travail</label><input id="siteName" value="Plan-les-Ouates" maxlength="100"></div><div><label for="personName">Ton prénom</label><input id="personName" placeholder="Ex. Camille" maxlength="50"></div></div>
+  <label>Horaires concernés</label><div class="shift-grid">
+   <label class="shift"><input type="checkbox" value="05:45–14:00" name="shift"><span>05:45–14:00</span></label>
+   <label class="shift"><input type="checkbox" value="06:00–14:00" name="shift"><span>06:00–14:00</span></label>
+   <label class="shift"><input type="checkbox" value="14:00–22:00" name="shift"><span>14:00–22:00</span></label>
+   <label class="shift"><input type="checkbox" value="22:00–06:00" name="shift"><span>22:00–06:00</span></label>
+   <label class="shift"><input type="checkbox" value="06:00–18:00" name="shift"><span>06:00–18:00</span></label>
+   <label class="shift"><input type="checkbox" value="18:00–06:00" name="shift"><span>18:00–06:00</span></label>
   </div>
-  <div class="grid">
-    <section class="card">
-      <h2>Créer un groupe</h2><p class="sub">Démarrez avec vos collègues. Vous pourrez ensuite les inviter avec un code privé.</p>
-      <form id="groupForm">
-        <label for="groupName">Nom du groupe</label><input id="groupName" required value="Covoiturage — Plan-les-Ouates" maxlength="70">
-        <div class="row">
-          <div><label for="company">Entreprise (facultatif)</label><input id="company" value="Patek Philippe" maxlength="100"></div>
-          <div><label for="site">Site de travail</label><input id="site" value="Plan-les-Ouates" required maxlength="100"></div>
-        </div>
-        <div class="row">
-          <div><label for="countryHome">Pays de résidence</label><select id="countryHome"><option>France</option><option>Suisse</option><option>Autre pays frontalier</option></select></div>
-          <div><label for="countryWork">Pays de travail</label><select id="countryWork"><option>Suisse</option><option>France</option><option>Autre pays frontalier</option></select></div>
-        </div>
-        <label for="owner">Votre prénom</label><input id="owner" required placeholder="Ex. : Camille" maxlength="60">
-        <label for="shifts">Horaires de travail concernés</label>
-        <p class="sub" style="margin:0 0 8px">Sélectionnez les horaires pratiqués par les membres de ce groupe. Ils serviront à organiser les trajets compatibles.</p>
-        <div class="shift-list">
-          <label class="shift-option"><input type="checkbox" name="shifts" value="05:45–14:00"> <span><strong>5 h 45 – 14 h</strong><small>Équipe minoritaire · covoiturage compatible avec 6 h</small></span></label>
-          <label class="shift-option"><input type="checkbox" name="shifts" value="06:00–14:00"> <span><strong>6 h – 14 h</strong><small>Équipe du matin</small></span></label>
-          <label class="shift-option"><input type="checkbox" name="shifts" value="14:00–22:00"> <span><strong>14 h – 22 h</strong><small>Équipe d'après-midi</small></span></label>
-          <label class="shift-option"><input type="checkbox" name="shifts" value="22:00–06:00"> <span><strong>22 h – 6 h</strong><small>Équipe de nuit</small></span></label>
-          <label class="shift-option"><input type="checkbox" name="shifts" value="06:00–18:00"> <span><strong>6 h – 18 h</strong><small>Journée longue</small></span></label>
-          <label class="shift-option"><input type="checkbox" name="shifts" value="18:00–06:00"> <span><strong>18 h – 6 h</strong><small>Nuit longue</small></span></label>
-        </div>
-        <button class="btn wide" type="submit">Créer le groupe privé</button>
-      </form>
-      <div class="result" id="groupResult" aria-live="polite"></div>
-    </section>
-    <section class="card">
-      <h2>Rejoindre un groupe</h2><p class="sub">Vous avez reçu un code d'invitation d'un collègue ?</p>
-      <form id="joinForm">
-        <label for="inviteCode">Code du groupe</label><input id="inviteCode" required placeholder="Ex. : PLO-7K4M">
-        <label for="joinName">Votre prénom</label><input id="joinName" required placeholder="Ex. : Alex" maxlength="60">
-        <button class="btn secondary wide" type="submit">Vérifier le code</button>
-      </form>
-      <div class="result" id="joinResult" aria-live="polite"></div>
-      <div class="notice"><strong>À ce stade :</strong> démonstration locale. Les groupes et codes ne sont pas encore publiés sur un serveur et ne peuvent pas être partagés entre appareils.</div>
-    </section>
-  </div>
-  <section class="card" style="margin-top:18px">
-    <h2>Mon planning de travail</h2>
-    <p class="sub">Renseignez vos horaires jour par jour ou importez votre planning PDF. Les horaires importés restent modifiables avant validation.</p>
-    <div class="row">
-      <div><label for="planningMonth">Mois du planning</label><input id="planningMonth" type="month" value="2026-10"></div>
-      <div><label for="planningPdf">Importer un planning PDF</label><input id="planningPdf" type="file" accept="application/pdf,.pdf"></div>
-    </div>
-    <div class="notice" id="pdfNotice">Import PDF : cette maquette permet de sélectionner un fichier, mais l'extraction automatique du texte et des horaires sera ajoutée dans la version connectée. Le PDF n'est pas envoyé ni analysé dans cette démonstration.</div>
-    <div class="calendar-head">
-      <button type="button" class="btn secondary" id="prevMonth" style="margin:0">‹</button>
-      <strong id="calendarTitle">Octobre 2026</strong>
-      <button type="button" class="btn secondary" id="nextMonth" style="margin:0">›</button>
-    </div>
-    <div class="calendar-grid" id="calendarGrid" aria-label="Calendrier du planning"></div>
-    <div id="dayEditor" class="day-editor">
-      <strong id="selectedDateTitle">Sélectionnez une date</strong>
-      <div class="row">
-        <div><label for="dayShift">Horaire du jour</label><select id="dayShift">
-          <option value="repos">Repos / non planifié</option>
-          <option value="05:45-14:00">5 h 45 – 14 h</option>
-          <option value="06:00-14:00">6 h – 14 h</option>
-          <option value="14:00-22:00">14 h – 22 h</option>
-          <option value="22:00-06:00">22 h – 6 h</option>
-          <option value="06:00-18:00">6 h – 18 h</option>
-          <option value="18:00-06:00">18 h – 6 h</option>
-          <option value="custom">Autre horaire</option>
-        </select></div>
-        <div id="customShiftWrap" style="display:none"><label for="customShift">Horaire personnalisé</label><input id="customShift" placeholder="Ex. 07:30-16:00"></div>
-      </div>
-      <label for="dayNote">Note (facultatif)</label><input id="dayNote" placeholder="Ex. changement de poste">
-      <button type="button" class="btn wide" id="saveDay">Enregistrer cette journée</button>
-      <div class="result" id="daySaved" aria-live="polite"></div>
-    </div>
-    <div class="notice">Dans la version complète, les horaires extraits du PDF seront proposés pour vérification. Vous pourrez corriger chaque journée, puis confirmer l'import avant de synchroniser le planning avec les suggestions de covoiturage.</div>
-  </section>
-  <section class="card" style="margin-top:18px">
-    <h2>Optimiser les déplacements</h2>
-    <p class="sub">Prévision de circulation, arrivée 15 minutes avant la prise de poste et point de rassemblement commun.</p>
-    <div class="row">
-      <div><label for="workShift">Horaire de travail</label><select id="workShift">
-        <option value="05:45">5 h 45 – 14 h</option>
-        <option value="06:00" selected>6 h – 14 h</option>
-        <option value="14:00">14 h – 22 h</option>
-        <option value="18:00">18 h – 6 h</option>
-        <option value="22:00">22 h – 6 h</option>
-        <option value="06:00long">6 h – 18 h</option>
-      </select></div>
-      <div><label for="earlyCompat">Option équipe 5 h 45</label><select id="earlyCompat">
-        <option value="yes">Autoriser avec l'équipe de 6 h</option>
-        <option value="no">Ne pas proposer ce rapprochement</option>
-      </select></div>
-    </div>
-    <div class="row">
-      <div><label for="traffic">Mode circulation</label><select id="traffic">
-        <option value="live">Trafic en temps réel (service cartographique à connecter)</option>
-        <option value="usual">Trafic habituel estimé</option>
-      </select></div>
-      <div><label for="meeting">Point de rassemblement</label><select id="meeting">
-        <option>Un point commun privilégié</option>
-        <option>Comparer jusqu'à 3 points communs</option>
-      </select></div>
-    </div>
-    <button class="btn wide" type="button" id="optimizeBtn">Calculer l'heure de départ idéale</button>
-    <div class="result" id="routeResult" aria-live="polite"></div>
-    <div class="notice">La maquette ne reçoit pas encore les positions des membres ni les données de trafic. Les heures affichées ci-dessous sont une simulation, pas une prévision routière réelle. La version complète utilisera les horaires et profils de trajet de chaque inscrit, avec une heure de départ commune calculée sur le membre le plus contraint.</div>
-  </section>
-  <section class="card" style="margin-top:18px">
-    <h2>Exemple de groupe</h2><p class="sub">Aperçu de la future gestion des membres et des comptes.</p>
-    <div class="stats">
-      <div class="stat"><small>Membres</small><strong id="memberCount">4</strong></div>
-      <div class="stat"><small>Km ce mois-ci</small><strong>640</strong></div>
-      <div class="stat"><small>Frais estimés</small><strong>91,52 €</strong></div>
-    </div>
-    <div class="members" id="members">
-      <div class="member"><div class="person"><span class="avatar">ML</span><div><strong>Marie L.</strong><div class="role">Administratrice du groupe</div></div></div><span class="pill">Conductrice</span></div>
-      <div class="member"><div class="person"><span class="avatar">AD</span><div><strong>Alex D.</strong><div class="role">Membre</div></div></div><span class="pill">Membre</span></div>
-      <div class="member"><div class="person"><span class="avatar">SK</span><div><strong>Sam K.</strong><div class="role">Membre</div></div></div><span class="pill">Membre</span></div>
-      <div class="member"><div class="person"><span class="avatar">JB</span><div><strong>Julie B.</strong><div class="role">Membre</div></div></div><span class="pill">Membre</span></div>
-    </div>
-  </section>
-  <div class="footer">Maquette de travail · Les données affichées sont fictives · Aucun paiement n'est effectué.</div>
+  <button class="btn full" id="saveGroup">Enregistrer le groupe sur ce téléphone</button><div id="groupResult" class="result" aria-live="polite"></div>
+ </section>
+ <section class="card" id="points">
+  <h2>2. Point de rassemblement</h2><p class="sub">Choisis le point commun du groupe ou ton départ de conducteur. Saisis une adresse ou touche la carte pour placer le repère.</p>
+  <label for="pointType">Type de point</label><select id="pointType"><option value="common">Point commun du groupe</option><option value="driver">Mon départ en tant que conducteur</option></select>
+  <label for="pointLabel">Nom du lieu</label><input id="pointLabel" placeholder="Ex. Parking de covoiturage de Cruseilles" maxlength="100">
+  <label for="pointAddress">Adresse / description</label><input id="pointAddress" placeholder="Rue, parking, commune ou repère" maxlength="180">
+  <div class="two"><div><label for="lat">Latitude</label><input id="lat" placeholder="Cliquer sur la carte" inputmode="decimal"></div><div><label for="lon">Longitude</label><input id="lon" placeholder="Cliquer sur la carte" inputmode="decimal"></div></div>
+  <div id="map" aria-label="Carte de sélection du point de rassemblement"></div>
+  <p class="hint">Carte OpenStreetMap. La position du téléphone n’est pas utilisée automatiquement : tu dois la demander avec le bouton ci-dessous.</p>
+  <div class="btnrow"><button class="btn secondary" id="useLocation">Utiliser ma position</button><button class="btn" id="savePoint">Enregistrer ce point</button></div>
+  <label for="stops">Arrêts supplémentaires (un par ligne)</label><textarea id="stops" rows="2" placeholder="Ex. Gare de Cruseilles&#10;Parking de Copponex"></textarea>
+  <div id="pointResult" class="result" aria-live="polite"></div>
+  <div class="notice"><strong>Important pour le test :</strong> les points et le groupe sont enregistrés uniquement dans le navigateur de ce téléphone. Ils ne sont pas encore synchronisés avec les collègues. Le partage collectif nécessite une base de données et une authentification.</div>
+ </section>
+ <section class="card">
+  <h2>3. Vérifier les points enregistrés</h2><p class="sub">Résumé local des points de rassemblement enregistrés sur cet appareil.</p><div id="savedPoints"><p>Aucun point enregistré pour le moment.</p></div><button class="btn secondary full" id="exportData">Exporter mes données de test</button>
+ </section>
+ <div class="footer">TrajetÉquipe · prototype pilote · données fictives et locales · aucun paiement</div>
 </main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
-const $ = id => document.getElementById(id);
-function code(){return "PLO-"+Math.random().toString(36).slice(2,6).toUpperCase();}
-$("groupForm").addEventListener("submit",e=>{
- e.preventDefault();
- const name=$("groupName").value.trim(), owner=$("owner").value.trim(), c=code();
- const shifts=[...document.querySelectorAll('input[name="shifts"]:checked')].map(el=>el.value);
- $("groupResult").style.display="block";
- $("groupResult").innerHTML="<strong>Groupe créé dans cette démonstration</strong>"+name+"<br>Administrateur : "+owner+"<br>Horaires sélectionnés : "+(shifts.length?shifts.join(", "):"aucun horaire sélectionné")+"<br>Code d'invitation : <strong>"+c+"</strong><small>Conservez ce code pour tester l'écran de vérification. Les horaires seront enregistrés sur le serveur dans la version complète.</small>";
- $("inviteCode").value=c;
-});
-const plan = {};
-let visibleMonth = new Date(2026, 9, 1);
-let selectedDayKey = null;
-const shiftLabels = {"repos":"Repos","05:45-14:00":"5:45–14","06:00-14:00":"6–14","14:00-22:00":"14–22","22:00-06:00":"22–6","06:00-18:00":"6–18","18:00-06:00":"18–6","custom":"Perso."};
-function dateKey(y,m,d){return y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0")}
-function renderCalendar(){
- const y=visibleMonth.getFullYear(),m=visibleMonth.getMonth();
- $("planningMonth").value=y+"-"+String(m+1).padStart(2,"0");
- $("calendarTitle").textContent=new Intl.DateTimeFormat("fr-FR",{month:"long",year:"numeric"}).format(visibleMonth);
- const labels=["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
- $("calendarGrid").innerHTML=labels.map(x=>'<div class="cal-label">'+x+'</div>').join("");
- const first=(new Date(y,m,1).getDay()+6)%7, count=new Date(y,m+1,0).getDate();
- for(let i=0;i<first;i++) $("calendarGrid").insertAdjacentHTML("beforeend",'<button type="button" class="cal-day empty" tabindex="-1"></button>');
- for(let d=1;d<=count;d++){
-  const key=dateKey(y,m,d), item=plan[key], label=item?(shiftLabels[item.shift]||item.shift):"";
-  $("calendarGrid").insertAdjacentHTML("beforeend",'<button type="button" class="cal-day '+(selectedDayKey===key?'selected':'')+'" data-day="'+key+'"><span class="day-num">'+d+'</span><span class="day-shift">'+label+'</span></button>');
- }
- $("calendarGrid").querySelectorAll("[data-day]").forEach(btn=>btn.addEventListener("click",()=>selectDay(btn.dataset.day)));
-}
-function selectDay(key){
- selectedDayKey=key; const [y,m,d]=key.split("-").map(Number);
- $("selectedDateTitle").textContent=new Intl.DateTimeFormat("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date(y,m-1,d));
- const item=plan[key]||{shift:"repos",note:""};
- $("dayShift").value=shiftLabels[item.shift] ? item.shift : "custom";
- $("customShiftWrap").style.display=$("dayShift").value==="custom"?"block":"none";
- $("customShift").value=$("dayShift").value==="custom"?item.shift:"";
- $("dayNote").value=item.note||"";
- $("daySaved").style.display="none";renderCalendar();
-}
-$("planningMonth").addEventListener("change",()=>{if($("planningMonth").value){const [y,m]=$("planningMonth").value.split("-").map(Number);visibleMonth=new Date(y,m-1,1);renderCalendar();}});
-$("prevMonth").addEventListener("click",()=>{visibleMonth=new Date(visibleMonth.getFullYear(),visibleMonth.getMonth()-1,1);renderCalendar();});
-$("nextMonth").addEventListener("click",()=>{visibleMonth=new Date(visibleMonth.getFullYear(),visibleMonth.getMonth()+1,1);renderCalendar();});
-$("dayShift").addEventListener("change",()=>{$("customShiftWrap").style.display=$("dayShift").value==="custom"?"block":"none";});
-$("saveDay").addEventListener("click",()=>{
- if(!selectedDayKey){$("daySaved").style.display="block";$("daySaved").textContent="Sélectionnez d'abord une date dans le calendrier.";return;}
- const s=$("dayShift").value==="custom"?$("customShift").value.trim():$("dayShift").value;
- if($("dayShift").value==="custom"&&!/^\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}$/.test(s)){alert("Saisissez un horaire au format 07:30-16:00.");return;}
- plan[selectedDayKey]={shift:s,note:$("dayNote").value.trim()};
- $("daySaved").style.display="block";$("daySaved").textContent="Planning mis à jour pour cette démonstration.";
- renderCalendar();
-});
-$("planningPdf").addEventListener("change",()=>{
- const f=$("planningPdf").files[0];if(!f)return;
- $("pdfNotice").textContent="Fichier sélectionné : "+f.name+" ("+Math.round(f.size/1024)+" Ko). L'extraction automatique nécessite le service d'analyse PDF de la version complète.";
-});
-renderCalendar();
-function minusMinutes(hhmm, mins){
- const [h,m]=hhmm.split(":").map(Number);let total=(h*60+m-mins+1440)%1440;
- return String(Math.floor(total/60)).padStart(2,"0")+":"+String(total%60).padStart(2,"0");
-}
-$("optimizeBtn").addEventListener("click",()=>{
- const shift=$("workShift").value, compat=$("earlyCompat").value;
- const start=shift==="06:00long"?"06:00":shift;
- const target=minusMinutes(start,15);
- const shiftText=shift==="05:45"?"5 h 45":shift==="06:00long"?"6 h (poste de 12 h)":start.replace(":"," h ");
- const compatibility=shift==="05:45" && compat==="yes"
-  ? "<br><strong>Compatibilité proposée :</strong> collègues commençant à 6 h, avec arrivée cible commune à 5 h 30."
-  : shift==="05:45" ? "<br><strong>Compatibilité :</strong> recherche limitée aux personnes compatibles avec une prise de poste à 5 h 45."
-  : "";
- $("routeResult").style.display="block";
- $("routeResult").innerHTML="<strong>Arrivée cible sur site : "+target+"</strong>Prise de poste : "+shiftText+"<br>Départ conseillé : à calculer selon la circulation et les temps d'accès réels au point de rassemblement."+compatibility+"<br><small>Le calcul définitif ajoutera une marge de sécurité variable selon le trafic et synchronisera les temps d'arrivée de tous les participants.</small>";
-});
-$("joinForm").addEventListener("submit",e=>{
- e.preventDefault();const c=$("inviteCode").value.trim().toUpperCase(),n=$("joinName").value.trim();
- $("joinResult").style.display="block";
- $("joinResult").innerHTML="<strong>Code saisi</strong>"+c+"<br>"+n+", l'écran de vérification fonctionne. Dans la version en ligne, le serveur vérifiera le code, son expiration et les droits d'accès.";
-});
+const $=id=>document.getElementById(id);
+const KEY="trajetequipe-pilot-v2";
+let map,marker,installPrompt;
+const blank=()=>({group:null,points:{common:null,driver:null}});
+function read(){try{return {...blank(),...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch(e){return blank()}}
+function write(d){localStorage.setItem(KEY,JSON.stringify(d))}
+function setPin(lat,lon){$("lat").value=Number(lat).toFixed(6);$("lon").value=Number(lon).toFixed(6);const ll=[Number(lat),Number(lon)];if(marker)marker.setLatLng(ll);else marker=L.marker(ll).addTo(map)}
+function initMap(){if(!window.L)return;$("map").innerHTML="";map=L.map("map").setView([46.15,6.12],10);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);map.on("click",e=>setPin(e.latlng.lat,e.latlng.lng));setTimeout(()=>map.invalidateSize(),200)}
+function loadPoint(){const d=read(),p=d.points[$("pointType").value];$("pointLabel").value=p?.label||"";$("pointAddress").value=p?.address||"";$("lat").value=p?.lat??"";$("lon").value=p?.lon??"";$("stops").value=p?.stops||"";if(map&&p?.lat!=null){setPin(p.lat,p.lon);map.setView([p.lat,p.lon],14)}else if(marker&&map){map.removeLayer(marker);marker=null}}
+function renderSaved(){const d=read();let html="";for(const [k,title] of [["common","Point commun"],["driver","Départ conducteur"]]){const p=d.points[k];if(p)html+=`<div style="border-bottom:1px solid #39393f;padding:10px 0"><strong>${title} : ${escapeHtml(p.label||"Lieu sans nom")}</strong><p>${escapeHtml(p.address||"Adresse non renseignée")}</p>${p.lat!=null?`<p>${p.lat}, ${p.lon}</p>`:""}${p.stops?`<p>Arrêts : ${escapeHtml(p.stops).replaceAll("\n"," · ")}</p>`:""}</div>`} $("savedPoints").innerHTML=html||"<p>Aucun point enregistré pour le moment.</p>"}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+$("saveGroup").addEventListener("click",()=>{const name=$("personName").value.trim();if(!name){$("personName").focus();alert("Entre ton prénom pour créer la fiche de test.");return}const group={name:$("groupName").value.trim(),site:$("siteName").value.trim(),person:name,shifts:[...document.querySelectorAll('input[name="shift"]:checked')].map(x=>x.value),updatedAt:new Date().toISOString()};const d=read();d.group=group;write(d);$("groupResult").style.display="block";$("groupResult").innerHTML=`<strong>Fiche de groupe enregistrée sur cet appareil</strong>${escapeHtml(group.name)}<br>Responsable : ${escapeHtml(name)}<br>Site : ${escapeHtml(group.site)}<br>Horaires : ${group.shifts.length?group.shifts.map(escapeHtml).join(", "):"à préciser"}<br><span class="saved">Attention : aucun collègue ne peut encore voir ces données depuis son téléphone.</span>`});
+$("pointType").addEventListener("change",loadPoint);
+$("savePoint").addEventListener("click",()=>{const la=$("lat").value.trim(),lo=$("lon").value.trim();if((la&&!lo)||(!la&&lo)){alert("Renseigne latitude et longitude, ou choisis le point directement sur la carte.");return}if(la&&(!Number.isFinite(Number(la))||!Number.isFinite(Number(lo))||Math.abs(Number(la))>90||Math.abs(Number(lo))>180)){alert("Coordonnées GPS invalides.");return}const d=read();d.points[$("pointType").value]={label:$("pointLabel").value.trim(),address:$("pointAddress").value.trim(),lat:la?Number(la):null,lon:lo?Number(lo):null,stops:$("stops").value.trim(),updatedAt:new Date().toISOString()};write(d);$("pointResult").style.display="block";$("pointResult").innerHTML=`<strong>Point enregistré sur ce téléphone</strong>${escapeHtml($("pointLabel").value||"Lieu sans nom")}<br>${escapeHtml($("pointAddress").value||"Adresse non renseignée")}<br><span class="saved">Pas encore partagé avec les autres membres.</span>`;renderSaved()});
+$("useLocation").addEventListener("click",()=>{if(!navigator.geolocation){alert("Géolocalisation indisponible sur cet appareil.");return}navigator.geolocation.getCurrentPosition(p=>{setPin(p.coords.latitude,p.coords.longitude);map.setView([p.coords.latitude,p.coords.longitude],15)},()=>alert("Position non disponible. Autorise la localisation ou choisis le point sur la carte."),{enableHighAccuracy:false,timeout:10000})});
+$("exportData").addEventListener("click",()=>{const blob=new Blob([JSON.stringify(read(),null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="trajetequipe-test.json";a.click();URL.revokeObjectURL(url)});
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e});
+$("installBtn").addEventListener("click",async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null}else alert("Sur Android : dans Chrome, ouvre le menu ⋮ puis « Installer l’application » ou « Ajouter à l’écran d’accueil ».")});
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+initMap();loadPoint();renderSaved();
 </script>
 </body></html>
